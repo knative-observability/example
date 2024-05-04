@@ -3,9 +3,27 @@ package function
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"math/rand"
+	"time"
 
 	"github.com/cloudevents/sdk-go/v2/event"
+	"github.com/google/uuid"
 )
+
+type InOrder struct {
+	PID string `json:"pid"`
+	UID string `json:"uid"`
+	Qty int64  `json:"qty"`
+}
+
+type OutOrder struct {
+	UUID string    `json:"uuid"`
+	Time time.Time `json:"time"`
+	PID  string    `json:"pid"`
+	UID  string    `json:"uid"`
+	Qty  int64     `json:"qty"`
+}
 
 // Handle an event.
 func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
@@ -14,9 +32,29 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	 *
 	 * Try running `go test`.  Add more test as you code in `handle_test.go`.
 	 */
-
-	fmt.Println("Received event")
-	fmt.Println(e) // echo to local output
+	var inOrder InOrder
+	err := e.DataAs(inOrder)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, err
+	}
+	orderID := uuid.NewString()
+	outOrder := OutOrder{
+		UUID: orderID,
+		Time: time.Now(),
+		PID:  inOrder.PID,
+		UID:  inOrder.UID,
+		Qty:  inOrder.Qty,
+	}
+	err = e.SetData("application/json", outOrder)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, err
+	}
+	slog.Info(fmt.Sprintf("Receive Order: [UUID %s] User [%s] by [%s] * [%d]\n",
+		orderID, outOrder.UID, inOrder.PID, outOrder.Qty))
+	time.Sleep(time.Duration(30+rand.Intn(40)) * time.Millisecond)
+	e.SetType("com.example.pay-stock")
 	return &e, nil // echo to caller
 }
 

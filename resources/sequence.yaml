@@ -1,0 +1,15 @@
+apiVersion: flows.knative.dev/v1
+kind: Sequence
+metadata:
+  name: merchant-sequence
+  namespace: example
+spec:
+  steps:
+    - ref:
+        apiVersion: v1
+        kind: Service
+        name: restock
+    - ref:
+        apiVersion: v1
+        kind: Service
+        name: notify-merchant

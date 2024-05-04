@@ -3,9 +3,26 @@ package function
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"time"
 
 	"github.com/cloudevents/sdk-go/v2/event"
+	"github.com/redis/go-redis/v9"
 )
+
+type Order struct {
+	UUID string    `json:"uuid"`
+	Time time.Time `json:"time"`
+	PID  string    `json:"pid"`
+	UID  string    `json:"uid"`
+	Qty  int64     `json:"qty"`
+}
+
+type InOrder struct {
+	Upstream string `json:"upstream"`
+	Order    Order  `json:"order"`
+	Success  bool   `json:"success"`
+}
 
 // Handle an event.
 func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
@@ -14,9 +31,75 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	 *
 	 * Try running `go test`.  Add more test as you code in `handle_test.go`.
 	 */
+	var inOrder InOrder
+	err := e.DataAs(&inOrder)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	client := redis.NewClient(&redis.Options{
+		Addr: "redis:6379",
+	})
+	defer client.Close()
 
-	fmt.Println("Received event")
-	fmt.Println(e) // echo to local output
+	// 0: waiting 1: fail 2: success
+	// payment*=3, receive-order*=1
+	if inOrder.Upstream == "payment" {
+		if inOrder.Success {
+			client.HIncrBy(ctx, "mq", inOrder.Order.UUID, 6)
+		} else {
+			client.HIncrBy(ctx, "mq", inOrder.Order.UUID, 3)
+		}
+	} else if inOrder.Upstream == "receive-order" {
+		if inOrder.Success {
+			client.HIncrBy(ctx, "mq", inOrder.Order.UUID, 2)
+		} else {
+			client.HIncrBy(ctx, "mq", inOrder.Order.UUID, 1)
+		}
+	}
+
+	if inOrder.Upstream == "payment" {
+		return nil, nil
+	}
+
+	timeout := time.After(1 * time.Minute)
+	for {
+		select {
+		case <-timeout:
+			estr := fmt.Sprintf("Message queue timeout for order %s", inOrder.Order.UUID)
+			slog.Error(estr)
+			return nil, fmt.Errorf(estr)
+		default:
+			stock, err := client.HGet(ctx, "mq", inOrder.Order.UUID).Int64()
+			if err != nil {
+				fmt.Println(err.Error())
+				return nil, err
+			}
+			switch stock {
+			case 8:
+				goto exitLoop
+			case 0, 2, 6:
+				time.Sleep(10 * time.Millisecond)
+			case 1, 7:
+				estr := fmt.Sprintf("Upstream receive-order failed for order %s", inOrder.Order.UUID)
+				slog.Error(estr)
+				return nil, fmt.Errorf(estr)
+			case 3, 5:
+				estr := fmt.Sprintf("Upstream payment failed for order %s", inOrder.Order.UUID)
+				slog.Error(estr)
+				return nil, fmt.Errorf(estr)
+			case 4:
+				estr := fmt.Sprintf("Upstream receive-order and payment failed for order %s", inOrder.Order.UUID)
+				slog.Error(estr)
+				return nil, fmt.Errorf(estr)
+			}
+		}
+	}
+exitLoop:
+	// Two upstream functions are both successful
+	// TODO: restore stock when payment failed or timeout
+	slog.Info(fmt.Sprintf("Verify succeeded: User [%s], Order ID [%s]\n", inOrder.Order.UID, inOrder.Order.UUID))
+	e.SetType("com.example.todo")
 	return &e, nil // echo to caller
 }
 

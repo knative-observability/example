@@ -1,0 +1,5 @@
+specVersion: 0.36.0
+name: func
+runtime: go
+created: 2024-05-04T11:33:30.062481247Z
+invoke: cloudevent

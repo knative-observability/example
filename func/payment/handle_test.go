@@ -25,8 +25,7 @@ func TestHandle(t *testing.T) {
 	// Assert
 	if echo == nil {
 		t.Errorf("received nil event") // fail on nil
-	}
-	if string(echo.Data()) != "data" {
+	} else if string(echo.Data()) != "data" {
 		t.Errorf("the received event expected data to be 'data', got '%s'", echo.Data())
 	}
 }

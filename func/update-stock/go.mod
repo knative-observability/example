@@ -5,5 +5,5 @@ go 1.14
 require (
 	github.com/cloudevents/sdk-go/v2 v2.5.0
 	github.com/google/uuid v1.6.0
-	github.com/redis/go-redis/v9 v9.5.1 // indirect
+	github.com/redis/go-redis/v9 v9.5.1
 )

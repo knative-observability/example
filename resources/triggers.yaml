@@ -1,0 +1,87 @@
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: user-trigger
+  namespace: example
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.example.user
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: receive-order
+  delivery:
+    retry: 0
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: pay-trigger
+  namespace: example
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.example.pay-stock
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: payment
+  delivery:
+    retry: 0
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: stock-trigger
+  namespace: example
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.example.pay-stock
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: update-stock
+  delivery:
+    retry: 0
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: verify-trigger
+  namespace: example
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.example.verify
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: validate-order
+  delivery:
+    retry: 0
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: merchant-trigger
+  namespace: example
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.example.merchant
+  subscriber:
+    ref:
+      apiVersion: flows.knative.dev/v1
+      kind: Sequence
+      name: merchant-sequence
