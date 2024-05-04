@@ -1,5 +1,5 @@
 specVersion: 0.36.0
-name: example
+name: restock
 runtime: go
 created: 2024-05-04T08:27:17.211250587Z
 invoke: cloudevent

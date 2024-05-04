@@ -1,5 +1,5 @@
 specVersion: 0.36.0
-name: example
+name: notify-user
 runtime: go
 created: 2024-05-04T08:28:09.9682835Z
 invoke: cloudevent

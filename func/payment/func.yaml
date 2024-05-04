@@ -1,5 +1,5 @@
 specVersion: 0.36.0
-name: example
+name: payment
 runtime: go
 created: 2024-05-04T08:31:49.741469255Z
 invoke: cloudevent

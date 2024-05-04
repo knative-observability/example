@@ -1,5 +1,5 @@
 specVersion: 0.36.0
-name: example
+name: receive-order
 runtime: go
 created: 2024-05-04T08:26:09.924361466Z
 invoke: cloudevent
