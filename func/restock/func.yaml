@@ -1,5 +1,12 @@
 specVersion: 0.36.0
 name: restock
 runtime: go
+registry: 192.168.103.220/library
+image: 192.168.103.220/library/restock:latest
+imageDigest: sha256:39c33f6e9d737a1737bf97981f7897ebc2c8c110ac9280772e20476efae038f1
 created: 2024-05-04T08:27:17.211250587Z
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: example

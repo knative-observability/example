@@ -33,7 +33,7 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	 * Try running `go test`.  Add more test as you code in `handle_test.go`.
 	 */
 	var inOrder InOrder
-	err := e.DataAs(inOrder)
+	err := e.DataAs(&inOrder)
 	if err != nil {
 		slog.Error(err.Error())
 		return nil, err

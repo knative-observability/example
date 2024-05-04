@@ -1,5 +1,12 @@
 specVersion: 0.36.0
 name: update-stock
 runtime: go
+registry: 192.168.103.220/library
+image: 192.168.103.220/library/update-stock:latest
+imageDigest: sha256:afa28accf3fb8ad985dd0c091a2857d499c4870182f025dc703573cb2ba7578f
 created: 2024-05-04T11:33:30.062481247Z
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: example

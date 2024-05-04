@@ -1,5 +1,12 @@
 specVersion: 0.36.0
 name: notify-merchant
 runtime: go
+registry: 192.168.103.220/library
+image: 192.168.103.220/library/notify-merchant:latest
+imageDigest: sha256:7a92d4c4340114fc9cc3fbb924a0b6450ef025a0493ef162fe3b540cb90e8be0
 created: 2024-05-04T08:37:05.163476955Z
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: example

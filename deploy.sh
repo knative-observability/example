@@ -15,3 +15,4 @@ func deploy -n example -r $REGISTRY --path ./func/validate-order
 kubectl create -f resources/triggers.yaml
 kubectl create -f resources/sequence.yaml
 kubectl create -f resources/redis.yaml
+kubectl create -f resources/client.yaml

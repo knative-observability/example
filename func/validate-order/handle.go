@@ -34,7 +34,7 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	var inOrder InOrder
 	err := e.DataAs(&inOrder)
 	if err != nil {
-		fmt.Println(err.Error())
+		slog.Error(err.Error())
 		return nil, err
 	}
 	client := redis.NewClient(&redis.Options{
@@ -43,18 +43,22 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	defer client.Close()
 
 	// 0: waiting 1: fail 2: success
-	// payment*=3, receive-order*=1
+	// payment*=3, update-stock*=1
 	if inOrder.Upstream == "payment" {
 		if inOrder.Success {
 			client.HIncrBy(ctx, "mq", inOrder.Order.UUID, 6)
+			slog.Debug(fmt.Sprintf("Payment success for order %s", inOrder.Order.UUID))
 		} else {
 			client.HIncrBy(ctx, "mq", inOrder.Order.UUID, 3)
+			slog.Debug(fmt.Sprintf("Payment failed for order %s", inOrder.Order.UUID))
 		}
-	} else if inOrder.Upstream == "receive-order" {
+	} else if inOrder.Upstream == "update-stock" {
 		if inOrder.Success {
 			client.HIncrBy(ctx, "mq", inOrder.Order.UUID, 2)
+			slog.Debug(fmt.Sprintf("Update stock success for order %s", inOrder.Order.UUID))
 		} else {
 			client.HIncrBy(ctx, "mq", inOrder.Order.UUID, 1)
+			slog.Debug(fmt.Sprintf("Update stock failed for order %s", inOrder.Order.UUID))
 		}
 	}
 
@@ -72,8 +76,7 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 		default:
 			stock, err := client.HGet(ctx, "mq", inOrder.Order.UUID).Int64()
 			if err != nil {
-				fmt.Println(err.Error())
-				return nil, err
+				stock = 0
 			}
 			switch stock {
 			case 8:

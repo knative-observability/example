@@ -1,5 +1,12 @@
 specVersion: 0.36.0
 name: payment
 runtime: go
+registry: 192.168.103.220/library
+image: 192.168.103.220/library/payment:latest
+imageDigest: sha256:80d863fb6ff1305d732b086648014a3c4d2a0a4050a1a8953ddae2fce76b0ce7
 created: 2024-05-04T08:31:49.741469255Z
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: example

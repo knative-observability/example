@@ -1,5 +1,12 @@
 specVersion: 0.36.0
 name: receive-order
 runtime: go
+registry: 192.168.103.220/library
+image: 192.168.103.220/library/receive-order:latest
+imageDigest: sha256:b15b8e1512ed427a334e78049ccf0683b629ea4bf851f517f670b5e8f1230838
 created: 2024-05-04T08:26:09.924361466Z
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: example

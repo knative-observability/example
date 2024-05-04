@@ -1,5 +1,12 @@
 specVersion: 0.36.0
 name: validate-order
 runtime: go
+registry: 192.168.103.220/library
+image: 192.168.103.220/library/validate-order:latest
+imageDigest: sha256:187556d390c382d16a9e5288e6259b7f7fe638ac626025de41f4e2c8afb344a0
 created: 2024-05-04T08:32:19.584981896Z
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: example
