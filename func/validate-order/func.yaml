@@ -1,0 +1,5 @@
+specVersion: 0.36.0
+name: example
+runtime: go
+created: 2024-05-04T08:32:19.584981896Z
+invoke: cloudevent
