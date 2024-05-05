@@ -3,7 +3,7 @@ name: validate-order
 runtime: go
 registry: 192.168.103.220/library
 image: 192.168.103.220/library/validate-order:latest
-imageDigest: sha256:5781a462a28ad346dc63cb5086f09ff51bc741002be32debfe2e2d77bae79410
+imageDigest: sha256:1d58132eaba4c0c7d8f62d8cf9a2aca28761970415596eadb0e599afb264abcf
 created: 2024-05-04T08:32:19.584981896Z
 invoke: cloudevent
 build:

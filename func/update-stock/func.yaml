@@ -3,7 +3,7 @@ name: update-stock
 runtime: go
 registry: 192.168.103.220/library
 image: 192.168.103.220/library/update-stock:latest
-imageDigest: sha256:412e692642b8e4930be377499d82a1c69ca501e6f4259b3c47f3661bd7075f70
+imageDigest: sha256:226a4bf96c58d148a564401d69373333c84d41d23d24d588ab501f5a62af145b
 created: 2024-05-04T11:33:30.062481247Z
 invoke: cloudevent
 build:
