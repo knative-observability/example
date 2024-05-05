@@ -1,5 +1,12 @@
 specVersion: 0.36.0
 name: generate-invoice
 runtime: go
+registry: 192.168.103.220/library
+image: 192.168.103.220/library/generate-invoice:latest
+imageDigest: sha256:1e3d646aef3f65f447b7f349e0b56f2cc1ecec7672f291d9847810dbed701abf
 created: 2024-05-04T08:34:28.088607473Z
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: example

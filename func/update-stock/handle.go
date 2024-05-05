@@ -49,7 +49,7 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	for {
 		locked, err := client.SetNX(ctx, "lock", uuid.NewString(), 10*time.Second).Result()
 		if err != nil {
-			slog.Error(err.Error())
+			slog.Error("Can's set lock: " + err.Error())
 			return nil, err
 		}
 		if locked {
@@ -64,18 +64,19 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	// Have got lock
 	stock, err := client.HGet(ctx, "stock", order.PID).Int64()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Cant't get stock: " + err.Error())
 		return nil, err
 	}
 	if stock < order.Qty {
 		slog.Warn(fmt.Sprintf("Stock not enough: [UUID %s] [PID: %s] %d < %d\n",
-			order.UUID, order.PID, stock, order.Qty))
+			order.UUID[:8], order.PID, stock, order.Qty))
 		e.SetData("application/json", StockResp{Upstream: "update-stock", Order: order, Success: false})
+		e.SetType("com.example.verify")
 		return &e, nil
 	}
-	result, err := client.HIncrBy(ctx, "stock", string(order.PID), -order.Qty).Result()
+	result, err := client.HIncrBy(ctx, "stock", order.PID, -order.Qty).Result()
 	if err != nil {
-		slog.Error(err.Error())
+		slog.Error("Can't decrease stock" + err.Error())
 		return nil, err
 	}
 	err = e.SetData("application/json", StockResp{Upstream: "update-stock", Order: order, Success: true})

@@ -11,6 +11,8 @@ func deploy -n example -r $REGISTRY --path ./func/update-stock
 func deploy -n example -r $REGISTRY --path ./func/notify-merchant
 func deploy -n example -r $REGISTRY --path ./func/payment
 func deploy -n example -r $REGISTRY --path ./func/validate-order
+func deploy -n example -r $REGISTRY --path ./func/generate-invoice
+func deploy -n example -r $REGISTRY --path ./func/notify-user
 
 kubectl create -f resources/triggers.yaml
 kubectl create -f resources/sequence.yaml

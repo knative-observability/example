@@ -73,6 +73,42 @@ spec:
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
 metadata:
+  name: notify-trigger
+  namespace: example
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.example.notify
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: notify-user
+  delivery:
+    retry: 0
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: invoice-trigger
+  namespace: example
+spec:
+  broker: default
+  filter:
+    attributes:
+      type: com.example.invoice
+  subscriber:
+    ref:
+      apiVersion: v1
+      kind: Service
+      name: generate-invoice
+  delivery:
+    retry: 0
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
   name: merchant-trigger
   namespace: example
 spec:

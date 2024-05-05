@@ -24,6 +24,11 @@ type InOrder struct {
 	Success  bool   `json:"success"`
 }
 
+type OutOrder struct {
+	Order   Order  `json:"order"`
+	Message string `json:"message"`
+}
+
 // Handle an event.
 func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	/*
@@ -84,17 +89,23 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 			case 0, 2, 6:
 				time.Sleep(10 * time.Millisecond)
 			case 1, 7:
-				estr := fmt.Sprintf("Upstream receive-order failed for order %s", inOrder.Order.UUID)
-				slog.Error(estr)
-				return nil, fmt.Errorf(estr)
+				estr := fmt.Sprintf("Upstream update stock failed for order %s", inOrder.Order.UUID)
+				slog.Warn(estr)
+				e.SetType("com.example.notify")
+				e.SetData("application/json", OutOrder{Order: inOrder.Order, Message: estr})
+				return &e, nil
 			case 3, 5:
 				estr := fmt.Sprintf("Upstream payment failed for order %s", inOrder.Order.UUID)
-				slog.Error(estr)
-				return nil, fmt.Errorf(estr)
+				slog.Warn(estr)
+				e.SetType("com.example.notify")
+				e.SetData("application/json", OutOrder{Order: inOrder.Order, Message: estr})
+				return &e, nil
 			case 4:
-				estr := fmt.Sprintf("Upstream receive-order and payment failed for order %s", inOrder.Order.UUID)
-				slog.Error(estr)
-				return nil, fmt.Errorf(estr)
+				estr := fmt.Sprintf("Upstream update stock and payment failed for order %s", inOrder.Order.UUID)
+				slog.Warn(estr)
+				e.SetType("com.example.notify")
+				e.SetData("application/json", OutOrder{Order: inOrder.Order, Message: estr})
+				return &e, nil
 			}
 		}
 	}
@@ -102,7 +113,8 @@ exitLoop:
 	// Two upstream functions are both successful
 	// TODO: restore stock when payment failed or timeout
 	slog.Info(fmt.Sprintf("Verify succeeded: User [%s], Order ID [%s]\n", inOrder.Order.UID, inOrder.Order.UUID))
-	e.SetType("com.example.todo")
+	e.SetType("com.example.invoice")
+	e.SetData("application/json", OutOrder{Order: inOrder.Order, Message: "Succeed"})
 	return &e, nil // echo to caller
 }
 

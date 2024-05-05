@@ -3,7 +3,7 @@ name: payment
 runtime: go
 registry: 192.168.103.220/library
 image: 192.168.103.220/library/payment:latest
-imageDigest: sha256:80d863fb6ff1305d732b086648014a3c4d2a0a4050a1a8953ddae2fce76b0ce7
+imageDigest: sha256:1da105ee2a329dfd799565f1fac86b0aab8c0bcb38b2e07d6bcf00b382059ef6
 created: 2024-05-04T08:31:49.741469255Z
 invoke: cloudevent
 build:

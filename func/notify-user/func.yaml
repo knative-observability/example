@@ -1,5 +1,12 @@
 specVersion: 0.36.0
 name: notify-user
 runtime: go
+registry: 192.168.103.220/library
+image: 192.168.103.220/library/notify-user:latest
+imageDigest: sha256:bdf91a0c8077fc00504151ac0c97c3250a9875952b20e49eecc63d833f95c572
 created: 2024-05-04T08:28:09.9682835Z
 invoke: cloudevent
+build:
+  builder: pack
+deploy:
+  namespace: example

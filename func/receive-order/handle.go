@@ -52,7 +52,7 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 		return nil, err
 	}
 	slog.Info(fmt.Sprintf("Receive Order: [UUID %s] User [%s] by [%s] * [%d]\n",
-		orderID, outOrder.UID, inOrder.PID, outOrder.Qty))
+		orderID[:8], outOrder.UID, inOrder.PID, outOrder.Qty))
 	time.Sleep(time.Duration(30+rand.Intn(40)) * time.Millisecond)
 	e.SetType("com.example.pay-stock")
 	return &e, nil // echo to caller

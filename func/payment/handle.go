@@ -38,7 +38,7 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 		return nil, err
 	}
 	time.Sleep(time.Duration(30+rand.Intn(40)) * time.Millisecond)
-	slog.Info(fmt.Sprintf("Payment: User [%s], Order ID [%s]\n", order.UID, order.UUID))
+	slog.Info(fmt.Sprintf("Payment: User [%s], Order ID [%s]\n", order.UID, order.UUID[:8]))
 	err = e.SetData("application/json", PayResp{Upstream: "payment", Order: order, Success: true})
 	if err != nil {
 		slog.Error(err.Error())
