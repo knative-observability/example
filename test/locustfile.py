@@ -11,11 +11,11 @@ class MyUser(HttpUser):
         pid = random.randint(0, 9)
         qty = random.randint(1, 3)
 
-        payload = {
+        params = {
             'mode': mode,
             'uid': uid,
             'pid': pid,
             'qty': qty
         }
 
-        self.client.post("/", json=payload)
+        self.client.post("/", params=params)

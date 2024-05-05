@@ -64,8 +64,8 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 	// Have got lock
 	stock, err := client.HGet(ctx, "stock", order.PID).Int64()
 	if err != nil {
-		slog.Error("Cant't get stock: " + err.Error())
-		return nil, err
+		slog.Warn("Cant't get stock: " + err.Error() + ", set to 0")
+		stock = 0
 	}
 	if stock < order.Qty {
 		slog.Warn(fmt.Sprintf("Stock not enough: [UUID %s] [PID: %s] %d < %d\n",
