@@ -67,7 +67,12 @@ func Handle(ctx context.Context, e event.Event) (*event.Event, error) {
 		return nil, err
 	}
 	time.Sleep(time.Duration(10+rand.Intn(20)) * time.Millisecond)
-	err = e.SetData("application/json", reqOut)
+	if rand.Intn(100) >= 5 {
+		err = e.SetData("application/json", reqOut)
+	} else {
+		// Bad Data
+		err = e.SetData("application/json", []byte{1, 2, 3})
+	}
 	if err != nil {
 		slog.Error(err.Error())
 		return nil, err

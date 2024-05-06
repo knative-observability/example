@@ -3,7 +3,7 @@ name: restock
 runtime: go
 registry: 192.168.103.220/library
 image: 192.168.103.220/library/restock:latest
-imageDigest: sha256:39c33f6e9d737a1737bf97981f7897ebc2c8c110ac9280772e20476efae038f1
+imageDigest: sha256:1b65ce8450b4eb97001f0e2af5139fa2ff42b2d317bff21bbeca46eb8a778dec
 created: 2024-05-04T08:27:17.211250587Z
 invoke: cloudevent
 build:

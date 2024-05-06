@@ -9,7 +9,11 @@ spec:
         apiVersion: v1
         kind: Service
         name: restock
+      delivery:
+        retry: 0
     - ref:
         apiVersion: v1
         kind: Service
         name: notify-merchant
+      delivery:
+        retry: 0

@@ -7,7 +7,10 @@ class MyUser(HttpUser):
 
     @task
     def test_endpoint(self):
-        mode = random.choice(['restock', 'buy'])
+        if random.random() < 0.45:
+            mode = 'restock'
+        else:
+            mode = 'buy'
         uid = random.randint(0, 9)
         pid = random.randint(0, 9)
         qty = random.randint(1, 3)
@@ -22,9 +25,9 @@ class MyUser(HttpUser):
         self.client.post("/", params=params)
 
 class SineLoadShape(LoadTestShape):
-    period = 60
+    period = 120
     min_users = 10
-    max_users = 50
+    max_users = 100
 
     def tick(self):
         run_time = self.get_run_time()
